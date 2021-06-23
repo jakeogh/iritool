@@ -248,4 +248,4 @@ def cli(ctx,
                              verbose=verbose,
                              debug=debug,)
 
-        print(iri, end=end)
+        print(iri, end=end.decode('utf8'))
