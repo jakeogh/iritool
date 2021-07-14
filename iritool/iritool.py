@@ -29,7 +29,7 @@ from signal import signal
 
 import click
 
-signal(SIGPIPE,SIG_DFL)
+signal(SIGPIPE, SIG_DFL)
 from pathlib import Path
 from typing import ByteString
 from typing import Generator
@@ -42,40 +42,17 @@ from urllib.parse import urldefrag
 from urllib.parse import urlparse
 from urllib.parse import urlsplit
 
+from asserttool import eprint
+from asserttool import ic
 from asserttool import nevd
+from asserttool import validate_slice
 from enumerate_input import enumerate_input
 from iridb.tld import tldextract
 from reify import reify
 from retry_on_exception import retry_on_exception
+from timetool import get_timestamp
 from uhashfs.utils import verify
 from urltool import extract_psl_domain
-
-
-def eprint(*args, **kwargs):
-    if 'file' in kwargs.keys():
-        kwargs.pop('file')
-    print(*args, file=sys.stderr, **kwargs)
-
-
-try:
-    from icecream import ic  # https://github.com/gruns/icecream
-    from icecream import icr  # https://github.com/jakeogh/icecream
-except ImportError:
-    ic = eprint
-    icr = eprint
-
-
-def get_timestamp():
-    timestamp = str("%.22f" % time.time())
-    return timestamp
-
-
-def validate_slice(slice_syntax):
-    assert isinstance(slice_syntax, str)
-    for c in slice_syntax:
-        if c not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '[', ']', ':']:
-            raise ValueError(slice_syntax)
-    return slice_syntax
 
 
 class IriBase():
