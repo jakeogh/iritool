@@ -58,7 +58,7 @@ from urltool import extract_psl_domain
 class IriBase():
 
     def __str__(self):
-        return self.iri
+        return self.iri  # mymy sez: "IriBase" has no attribute "iri"  [attr-defined]
 
     def __contains__(self, match):
         if match in str(self.iri):
