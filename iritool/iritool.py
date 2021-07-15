@@ -38,6 +38,8 @@ from typing import List
 from typing import Optional
 from typing import Sequence
 from typing import Tuple
+from urllib.parse import ParseResult
+from urllib.parse import SplitResult
 from urllib.parse import urldefrag
 from urllib.parse import urlparse
 from urllib.parse import urlsplit
@@ -56,6 +58,7 @@ from urltool import extract_psl_domain
 
 
 class IriBase():
+    iri: ParseResult | SplitResult  # X | Y syntax for unions requires Python 3.10  [misc]
 
     def __str__(self):
         return self.iri  # mymy sez: "IriBase" has no attribute "iri"  [attr-defined]
