@@ -58,7 +58,7 @@ from urltool import extract_psl_domain
 
 
 class IriBase():
-    iri: ParseResult | SplitResult  # X | Y syntax for unions requires Python 3.10  [misc]
+    #iri: ParseResult | SplitResult  # X | Y syntax for unions requires Python 3.10  [misc]
 
     def __str__(self):
         return self.iri  # mymy sez: "IriBase" has no attribute "iri"  [attr-defined]
