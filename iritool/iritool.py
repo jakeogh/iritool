@@ -38,6 +38,7 @@ from typing import List
 from typing import Optional
 from typing import Sequence
 from typing import Tuple
+from typing import Union
 from urllib.parse import ParseResult
 from urllib.parse import SplitResult
 from urllib.parse import urldefrag
@@ -49,6 +50,7 @@ from asserttool import ic
 from asserttool import nevd
 from asserttool import validate_slice
 from enumerate_input import enumerate_input
+from hashtool import Digest
 from iridb.tld import tldextract
 from reify import reify
 from retry_on_exception import retry_on_exception
@@ -59,9 +61,14 @@ from urltool import extract_psl_domain
 
 class IriBase():
     #iri: ParseResult | SplitResult  # X | Y syntax for unions requires Python 3.10  [misc]
+    #iri: Union[ParseResult, SplitResult]
+    iri: str
+    domain: str
+    verbose: bool
+    debug: bool
 
     def __str__(self):
-        return self.iri  # mymy sez: "IriBase" has no attribute "iri"  [attr-defined]
+        return self.iri
 
     def __contains__(self, match):
         if match in str(self.iri):
@@ -107,6 +114,14 @@ class IriBase():
     def domain_sld(self):
         tld = tldextract(self.iri).domain
         return tld
+
+    @reify
+    def digest(self):
+        digest = Digest(preimage=self.iri.encode('utf8'),
+                        algorithm='sha3_256',
+                        verbose=self.verbose,
+                        debug=self.debug,)
+        return digest
 
     def is_internal(self, root_iri):
         #assert isinstance(root_iri, Iri)  # nawh, it could be a UrlparseResult
