@@ -49,13 +49,13 @@ from asserttool import eprint
 from asserttool import ic
 from asserttool import nevd
 from asserttool import validate_slice
+from asserttool import verify
 from enumerate_input import enumerate_input
 from hashtool import Digest
 from iridb.tld import tldextract
 from reify import reify
 from retry_on_exception import retry_on_exception
 from timetool import get_timestamp
-from uhashfs.utils import verify
 from urltool import extract_psl_domain
 
 
