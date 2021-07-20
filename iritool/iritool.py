@@ -247,3 +247,17 @@ def cli(ctx,
                              debug=debug,)
 
         print(iri, end=end.decode('utf8'))
+
+
+
+#def domain_set_to_sorted_list_grouped_by_tld(domains):
+#    data = []
+#    for x in domains:
+#       d = x.strip().split('.')
+#       d.reverse()
+#       data.append(d)
+#    data.sort()
+#    for y in data:
+#       y.reverse()
+#       print('.'.join(y))
+#
