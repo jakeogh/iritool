@@ -47,6 +47,7 @@ from urllib.parse import urlsplit
 
 from asserttool import eprint
 from asserttool import ic
+from asserttool import increment_debug
 from asserttool import nevd
 from asserttool import validate_slice
 from asserttool import verify
@@ -131,6 +132,7 @@ class IriBase():
 
 
 class UrlsplitResult(IriBase):
+    @increment_debug
     def __init__(self,
                  iri: str,
                  verbose: bool,
@@ -170,6 +172,7 @@ class UrlsplitResult(IriBase):
 
 
 class UrlparseResult(IriBase):
+    @increment_debug
     def __init__(self, iri: str,
                  verbose: bool,
                  debug: bool,
