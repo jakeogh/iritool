@@ -135,7 +135,8 @@ class UrlsplitResult(IriBase):
                  iri: str,
                  verbose: bool,
                  debug: bool,
-                 link_text: str = None,):
+                 link_text: Optional[str] = None,
+                 ):
         try:
             verify(isinstance(iri, str))
         except ValueError:
@@ -172,7 +173,8 @@ class UrlparseResult(IriBase):
     def __init__(self, iri: str,
                  verbose: bool,
                  debug: bool,
-                 link_text: str = None,):
+                 link_text: Optional[str] = None,
+                 ):
         try:
             verify(isinstance(iri, str))
         except ValueError:
