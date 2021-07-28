@@ -83,6 +83,7 @@ class IriBase():
         return self.iri.__getitem__(key)
 
     def startswith(self, match):
+        import IPython; IPython.embed()
         if str(self.iri).startswith(match):
             return True
         return False
@@ -173,7 +174,8 @@ class UrlsplitResult(IriBase):
 
 class UrlparseResult(IriBase):
     @increment_debug
-    def __init__(self, iri: str,
+    def __init__(self,
+                 iri: str,
                  verbose: bool,
                  debug: bool,
                  link_text: Optional[str] = None,
