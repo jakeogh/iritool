@@ -83,8 +83,7 @@ class IriBase():
         return self.iri.__getitem__(key)
 
     def startswith(self, match):
-        import IPython; IPython.embed()
-        if str(self.iri).startswith(match):
+        if self.iri.startswith(match):
             return True
         return False
 
