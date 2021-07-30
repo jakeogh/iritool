@@ -69,7 +69,7 @@ class IriBase():
     debug: bool
 
     def __str__(self):
-        import IPython; IPython.embed()
+        #import IPython; IPython.embed()
         return self.iri
 
     def __contains__(self, match):
