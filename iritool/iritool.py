@@ -150,6 +150,7 @@ class UrlsplitResult(IriBase):
 
         self.urlsplit = urlsplit(iri)
         self.iri, _ = urldefrag(iri)
+        self.iri = self.iri.strip()
         self.link_text = link_text
         self.geturl = self.urlsplit.geturl()
         self.scheme = self.urlsplit.scheme
@@ -189,6 +190,7 @@ class UrlparseResult(IriBase):
         self.debug = debug
         self.urlparse = urlparse(iri)
         self.iri, _ = urldefrag(iri)
+        self.iri = self.iri.strip()
         self.link_text = link_text
         self.fragment = self.urlparse.fragment
         self.geturl = self.urlparse.geturl()
