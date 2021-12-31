@@ -50,7 +50,6 @@ from asserttool import ic
 from asserttool import increment_debug
 from asserttool import nevd
 from asserttool import validate_slice
-from asserttool import verify
 from enumerate_input import enumerate_input
 from hashtool import Digest
 from iridb.tld import tldextract
@@ -141,8 +140,8 @@ class UrlsplitResult(IriBase):
                  link_text: Optional[str] = None,
                  ):
         try:
-            verify(isinstance(iri, str))
-        except ValueError:
+            assert isinstance(iri, str)
+        except AssertionError:
             msg = "iri: {} must be type str, not type {}".format(iri, type(iri))
             raise ValueError(msg)
         self.verbose = verbose
@@ -182,8 +181,8 @@ class UrlparseResult(IriBase):
                  link_text: Optional[str] = None,
                  ):
         try:
-            verify(isinstance(iri, str))
-        except ValueError:
+            assert isinstance(iri, str)
+        except AssertionError:
             msg = "iri: {} must be type str, not type {}".format(iri, type(iri))
             raise ValueError(msg)
         self.verbose = verbose
@@ -240,11 +239,6 @@ def cli(ctx,
     index = 0
     for index, iri in enumerate_input(iterator=iterator,
                                       dont_decode=False,  # iris are unicode
-                                      null=null,
-                                      progress=False,
-                                      skip=None,
-                                      head=None,
-                                      tail=None,
                                       debug=debug,
                                       verbose=verbose,):
 
