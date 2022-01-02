@@ -28,6 +28,8 @@ from signal import SIGPIPE
 from signal import signal
 
 import click
+from clicktool import click_add_options
+from clicktool import click_global_options
 
 signal(SIGPIPE, SIG_DFL)
 from pathlib import Path
@@ -48,8 +50,7 @@ from urllib.parse import urlsplit
 from asserttool import eprint
 from asserttool import ic
 from asserttool import increment_debug
-from asserttool import nevd
-from asserttool import validate_slice
+from asserttool import tv
 from enumerate_input import enumerate_input
 from hashtool import Digest
 from iridb.tld import tldextract
@@ -65,7 +66,6 @@ class IriBase():
     iri: str
     domain: str
     verbose: bool
-    debug: bool
 
     def __str__(self):
         #import IPython; IPython.embed()
@@ -121,7 +121,7 @@ class IriBase():
         digest = Digest(preimage=self.iri.encode('utf8'),
                         algorithm='sha3_256',
                         verbose=self.verbose,
-                        debug=self.debug,)
+                        )
         return digest
 
     def is_internal(self, root_iri):
@@ -136,7 +136,6 @@ class UrlsplitResult(IriBase):
     def __init__(self,
                  iri: str,
                  verbose: bool,
-                 debug: bool,
                  link_text: Optional[str] = None,
                  ):
         try:
@@ -145,7 +144,6 @@ class UrlsplitResult(IriBase):
             msg = "iri: {} must be type str, not type {}".format(iri, type(iri))
             raise ValueError(msg)
         self.verbose = verbose
-        self.debug = debug
 
         self.urlsplit = urlsplit(iri)
         self.iri, _ = urldefrag(iri)
@@ -177,7 +175,6 @@ class UrlparseResult(IriBase):
     def __init__(self,
                  iri: str,
                  verbose: bool,
-                 debug: bool,
                  link_text: Optional[str] = None,
                  ):
         try:
@@ -186,7 +183,6 @@ class UrlparseResult(IriBase):
             msg = "iri: {} must be type str, not type {}".format(iri, type(iri))
             raise ValueError(msg)
         self.verbose = verbose
-        self.debug = debug
         self.urlparse = urlparse(iri)
         self.iri, _ = urldefrag(iri)
         self.iri = self.iri.strip()
@@ -218,28 +214,28 @@ class UrlparseResult(IriBase):
 
 @click.command()
 @click.argument("iris", type=str, nargs=-1)
-@click.option('--verbose', is_flag=True)
-@click.option('--debug', is_flag=True)
+@click_add_options(click_global_options)
 @click.pass_context
 def cli(ctx,
         iris: Optional[Iterable[str]],
-        verbose: bool,
-        debug: bool,
+        verbose: int,
+        verbose_inf: bool,
         ):
 
     ctx.ensure_object(dict)
-    null, end, verbose, debug = nevd(ctx=ctx,
-                                     printn=False,
-                                     ipython=False,
-                                     verbose=verbose,
-                                     debug=debug,)
+    tty, verbose = tv(ctx=ctx,
+                      verbose=verbose,
+                      verbose_inf=verbose_inf,
+                      )
 
+    end = b'\0'
+    if tty:
+        end = b'\n'
     iterator = iris
 
     index = 0
     for index, iri in enumerate_input(iterator=iterator,
                                       dont_decode=False,  # iris are unicode
-                                      debug=debug,
                                       verbose=verbose,):
 
         if verbose:
@@ -247,7 +243,7 @@ def cli(ctx,
 
         iri = UrlparseResult(iri=iri,
                              verbose=verbose,
-                             debug=debug,)
+                             )
 
         print(iri, end=end.decode('utf8'))
 
