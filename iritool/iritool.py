@@ -23,16 +23,10 @@
 import os
 import sys
 import time
+from pathlib import Path
 from signal import SIG_DFL
 from signal import SIGPIPE
 from signal import signal
-
-import click
-from clicktool import click_add_options
-from clicktool import click_global_options
-
-signal(SIGPIPE, SIG_DFL)
-from pathlib import Path
 from typing import ByteString
 from typing import Generator
 from typing import Iterable
@@ -47,17 +41,22 @@ from urllib.parse import urldefrag
 from urllib.parse import urlparse
 from urllib.parse import urlsplit
 
+import click
 from asserttool import eprint
 from asserttool import ic
 from asserttool import increment_debug
 from asserttool import tv
-from enumerate_input import enumerate_input
+from clicktool import click_add_options
+from clicktool import click_global_options
 from hashtool import Digest
 from iridb.tld import tldextract
 from reify import reify
 from retry_on_exception import retry_on_exception
 from timetool import get_timestamp
+from unmp import unmp
 from urltool import extract_psl_domain
+
+signal(SIGPIPE, SIG_DFL)
 
 
 class IriBase():
@@ -231,13 +230,13 @@ def cli(ctx,
     end = b'\0'
     if tty:
         end = b'\n'
-    iterator = iris
+    if iris:
+        iterator = iris
+    else:
+        iterator = unmp(valid_types=[str,], verbose=verbose)
 
     index = 0
-    for index, iri in enumerate_input(iterator=iterator,
-                                      dont_decode=False,  # iris are unicode
-                                      verbose=verbose,):
-
+    for index, iri in enumerate(iterator):
         if verbose:
             ic(index, iri)
 
