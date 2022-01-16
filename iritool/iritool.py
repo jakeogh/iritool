@@ -210,8 +210,9 @@ class UrlparseResult(IriBase):
 
         #ic(self.scheme)
         if self.scheme is '':
-            ic(len(iri), iri)
-            raise UrlMissingSchemeError(iri)
+            ic('missing scheme!', len(iri), iri)
+            ic(self.urlparse)
+            #raise UrlMissingSchemeError(iri)
         if self.verbose:
             ic(self.urlparse, self.iri, self.link_text, self.fragment, self.geturl, self.hostname, self.netloc, self.params, self.password, self.path, self.scheme, self.query, self.username, self.domain, self.domain_tld, self.domain_psl, self.domain_sld)
 
