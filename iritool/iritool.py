@@ -59,6 +59,10 @@ from urltool import extract_psl_domain
 signal(SIGPIPE, SIG_DFL)
 
 
+class UrlMissingSchemeError(ValueError):
+    pass
+
+
 class IriBase():
     #iri: ParseResult | SplitResult  # X | Y syntax for unions requires Python 3.10  [misc]
     #iri: Union[ParseResult, SplitResult]
@@ -205,7 +209,9 @@ class UrlparseResult(IriBase):
         self.domain = self.urlparse.netloc
 
         #ic(self.scheme)
-        assert self.scheme is not ''
+        if self.scheme is '':
+            ic(len(iri), iri)
+            raise UrlMissingSchemeError(iri)
         if self.verbose:
             ic(self.urlparse, self.iri, self.link_text, self.fragment, self.geturl, self.hostname, self.netloc, self.params, self.password, self.path, self.scheme, self.query, self.username, self.domain, self.domain_tld, self.domain_psl, self.domain_sld)
 
