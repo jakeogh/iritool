@@ -205,9 +205,9 @@ class UrlparseResult(IriBase):
         self.domain = self.urlparse.netloc
 
         ic(self.scheme)
+        assert self.scheme is not ''
         if self.verbose:
             ic(self.urlparse, self.iri, self.link_text, self.fragment, self.geturl, self.hostname, self.netloc, self.params, self.password, self.path, self.scheme, self.query, self.username, self.domain, self.domain_tld, self.domain_psl, self.domain_sld)
-        assert self.scheme is not None
 
     def __repr__(self):
         return '<iridb.atoms.UrlparseResult ' + str(self) + '>'
