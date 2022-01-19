@@ -20,21 +20,11 @@
 # pylint: disable=R0916  # Too many boolean expressions in if statement
 # pylint: disable=C0305  # Trailing newlines editor should fix automatically, pointless warning
 
-import os
-import sys
-import time
-from pathlib import Path
 from signal import SIG_DFL
 from signal import SIGPIPE
 from signal import signal
-from typing import ByteString
-from typing import Generator
 from typing import Iterable
-from typing import List
 from typing import Optional
-from typing import Sequence
-from typing import Tuple
-from typing import Union
 from urllib.parse import ParseResult
 from urllib.parse import SplitResult
 from urllib.parse import urldefrag
@@ -42,7 +32,7 @@ from urllib.parse import urlparse
 from urllib.parse import urlsplit
 
 import click
-from asserttool import eprint
+#from asserttool import eprint
 from asserttool import ic
 from asserttool import increment_debug
 from asserttool import tv
@@ -51,8 +41,7 @@ from clicktool import click_global_options
 from hashtool import Digest
 from iridb.tld import tldextract
 from reify import reify
-from retry_on_exception import retry_on_exception
-from timetool import get_timestamp
+#from timetool import get_timestamp
 from unmp import unmp
 from urltool import extract_psl_domain
 
@@ -68,7 +57,7 @@ class IriBase():
     #iri: Union[ParseResult, SplitResult]
     iri: str
     domain: str
-    verbose: bool
+    verbose: int
 
     def __str__(self):
         #import IPython; IPython.embed()
@@ -138,7 +127,7 @@ class UrlsplitResult(IriBase):
     @increment_debug
     def __init__(self,
                  iri: str,
-                 verbose: bool,
+                 verbose: int,
                  link_text: Optional[str] = None,
                  ):
         try:
@@ -177,13 +166,13 @@ class UrlparseResult(IriBase):
     @increment_debug
     def __init__(self,
                  iri: str,
-                 verbose: bool,
+                 verbose: int,
                  link_text: Optional[str] = None,
                  ):
         try:
             assert isinstance(iri, str)
         except AssertionError:
-            msg = "iri: {} must be type str, not type {}".format(iri, type(iri))
+            msg = f'iri: {iri} must be type str, not type {type(iri)}'
             raise ValueError(msg)
         self.verbose = verbose
         self.urlparse = urlparse(iri)
@@ -212,7 +201,7 @@ class UrlparseResult(IriBase):
         if self.scheme is '':
             ic('missing scheme!', len(iri), iri)
             ic(self.urlparse)
-            #raise UrlMissingSchemeError(iri)
+            raise UrlMissingSchemeError(iri)
         if self.verbose:
             ic(self.urlparse, self.iri, self.link_text, self.fragment, self.geturl, self.hostname, self.netloc, self.params, self.password, self.path, self.scheme, self.query, self.username, self.domain, self.domain_tld, self.domain_psl, self.domain_sld)
 
