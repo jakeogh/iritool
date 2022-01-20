@@ -168,6 +168,7 @@ class UrlparseResult(IriBase):
                  iri: str,
                  verbose: int,
                  link_text: Optional[str] = None,
+                 allow_missing_scheme: bool = False,
                  ):
         try:
             assert isinstance(iri, str)
@@ -175,6 +176,7 @@ class UrlparseResult(IriBase):
             msg = f'iri: {iri} must be type str, not type {type(iri)}'
             raise ValueError(msg)
         self.verbose = verbose
+        self.allow_missing_scheme = allow_missing_scheme
         self.urlparse = urlparse(iri)
         self.iri, _ = urldefrag(iri)
         self.iri = self.iri.strip()
@@ -201,7 +203,8 @@ class UrlparseResult(IriBase):
         if self.scheme is '':
             ic('missing scheme!', len(iri), iri)
             ic(self.urlparse)
-            raise UrlMissingSchemeError(iri)
+            if not self.allow_missing_scheme:
+                raise UrlMissingSchemeError(iri)
         if self.verbose:
             ic(self.urlparse, self.iri, self.link_text, self.fragment, self.geturl, self.hostname, self.netloc, self.params, self.password, self.path, self.scheme, self.query, self.username, self.domain, self.domain_tld, self.domain_psl, self.domain_sld)
 
