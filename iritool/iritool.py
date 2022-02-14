@@ -25,6 +25,7 @@ from signal import SIGPIPE
 from signal import signal
 from typing import Iterable
 from typing import Optional
+from typing import Union
 from urllib.parse import ParseResult
 from urllib.parse import SplitResult
 from urllib.parse import urldefrag
@@ -32,16 +33,14 @@ from urllib.parse import urlparse
 from urllib.parse import urlsplit
 
 import click
-#from asserttool import eprint
 from asserttool import ic
 from asserttool import increment_debug
-from asserttool import tv
 from clicktool import click_add_options
 from clicktool import click_global_options
+from clicktool import tv
 from hashtool import Digest
 from iridb.tld import tldextract
 from reify import reify
-#from timetool import get_timestamp
 from unmp import unmp
 from urltool import extract_psl_domain
 
@@ -57,7 +56,7 @@ class IriBase():
     #iri: Union[ParseResult, SplitResult]
     iri: str
     domain: str
-    verbose: int
+    verbose: Union[bool, int, float]
 
     def __str__(self):
         #import IPython; IPython.embed()
@@ -127,7 +126,7 @@ class UrlsplitResult(IriBase):
     @increment_debug
     def __init__(self,
                  iri: str,
-                 verbose: int,
+                 verbose: Union[bool, int, float],
                  link_text: Optional[str] = None,
                  ):
         try:
@@ -166,7 +165,7 @@ class UrlparseResult(IriBase):
     @increment_debug
     def __init__(self,
                  iri: str,
-                 verbose: int,
+                 verbose: Union[bool, int, float],
                  link_text: Optional[str] = None,
                  allow_missing_scheme: bool = False,
                  ):
@@ -218,7 +217,7 @@ class UrlparseResult(IriBase):
 @click.pass_context
 def cli(ctx,
         iris: Optional[Iterable[str]],
-        verbose: int,
+        verbose: Union[bool, int, float],
         verbose_inf: bool,
         ):
 
