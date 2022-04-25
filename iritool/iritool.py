@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
-# flake8: noqa           # flake8 has no per file settings :(
 # pylint: disable=C0111  # docstrings are always outdated and wrong
 # pylint: disable=W0511  # todo is encouraged
 # pylint: disable=C0301  # line too long
@@ -40,8 +39,9 @@ from clicktool import click_global_options
 from clicktool import tv
 from hashtool import Digest
 from iridb.tld import tldextract
+from mptool import output
+from mptool import unmp
 from reify import reify
-from unmp import unmp
 from urltool import extract_psl_domain
 
 signal(SIGPIPE, SIG_DFL)
@@ -51,15 +51,15 @@ class UrlMissingSchemeError(ValueError):
     pass
 
 
-class IriBase():
-    #iri: ParseResult | SplitResult  # X | Y syntax for unions requires Python 3.10  [misc]
-    #iri: Union[ParseResult, SplitResult]
+class IriBase:
+    # iri: ParseResult | SplitResult  # X | Y syntax for unions requires Python 3.10  [misc]
+    # iri: Union[ParseResult, SplitResult]
     iri: str
     domain: str
     verbose: Union[bool, int, float]
 
     def __str__(self):
-        #import IPython; IPython.embed()
+        # import IPython; IPython.embed()
         return self.iri
 
     def __contains__(self, match):
@@ -109,14 +109,15 @@ class IriBase():
 
     @reify
     def digest(self):
-        digest = Digest(preimage=self.iri.encode('utf8'),
-                        algorithm='sha3_256',
-                        verbose=self.verbose,
-                        )
+        digest = Digest(
+            preimage=self.iri.encode("utf8"),
+            algorithm="sha3_256",
+            verbose=self.verbose,
+        )
         return digest
 
     def is_internal(self, root_iri):
-        #assert isinstance(root_iri, Iri)  # nawh, it could be a UrlparseResult
+        # assert isinstance(root_iri, Iri)  # nawh, it could be a UrlparseResult
         if self.domain_psl == root_iri.domain_psl:
             return True
         return False
@@ -124,15 +125,16 @@ class IriBase():
 
 class UrlsplitResult(IriBase):
     @increment_debug
-    def __init__(self,
-                 iri: str,
-                 verbose: Union[bool, int, float],
-                 link_text: Optional[str] = None,
-                 ):
+    def __init__(
+        self,
+        iri: str,
+        verbose: Union[bool, int, float],
+        link_text: Optional[str] = None,
+    ):
         try:
             assert isinstance(iri, str)
         except AssertionError:
-            msg = "iri: {} must be type str, not type {}".format(iri, type(iri))
+            msg = f"iri: {iri} must be type str, not type {type(iri)}"
             raise ValueError(msg)
         self.verbose = verbose
 
@@ -154,25 +156,26 @@ class UrlsplitResult(IriBase):
             self.port = self.urlsplit.port
         except ValueError as e:  # if there was an invalid port
             self.port = None
-        #self.params = self.urlsplit.params  # urlsplit does not split out params, they are associated with each path element
-        #verify(self.scheme, msg="scheme:// is required")
+        # self.params = self.urlsplit.params  # urlsplit does not split out params, they are associated with each path element
+        # verify(self.scheme, msg="scheme:// is required")
 
     def __repr__(self):
-        return '<iridb.atoms.UrlsplitResult ' + str(self) + '>'
+        return f"<iridb.atoms.UrlsplitResult {str(self)}>"
 
 
 class UrlparseResult(IriBase):
     @increment_debug
-    def __init__(self,
-                 iri: str,
-                 verbose: Union[bool, int, float],
-                 link_text: Optional[str] = None,
-                 allow_missing_scheme: bool = False,
-                 ):
+    def __init__(
+        self,
+        iri: str,
+        verbose: Union[bool, int, float],
+        link_text: Optional[str] = None,
+        allow_missing_scheme: bool = False,
+    ):
         try:
             assert isinstance(iri, str)
         except AssertionError:
-            msg = f'iri: {iri} must be type str, not type {type(iri)}'
+            msg = f"iri: {iri} must be type str, not type {type(iri)}"
             raise ValueError(msg)
         self.verbose = verbose
         self.allow_missing_scheme = allow_missing_scheme
@@ -194,61 +197,83 @@ class UrlparseResult(IriBase):
             self.port = None
 
         self.query = self.urlparse.query
-        #verify(self.scheme, msg="scheme:// is required")
+        # verify(self.scheme, msg="scheme:// is required")
         self.username = self.urlparse.username
         self.domain = self.urlparse.netloc
 
-        #ic(self.scheme)
-        if self.scheme is '':
-            ic('missing scheme!', len(iri), iri)
+        # ic(self.scheme)
+        if self.scheme == "":
+            ic("missing scheme!", len(iri), iri)
             ic(self.urlparse)
             if not self.allow_missing_scheme:
                 raise UrlMissingSchemeError(iri)
         if self.verbose:
-            ic(self.urlparse, self.iri, self.link_text, self.fragment, self.geturl, self.hostname, self.netloc, self.params, self.password, self.path, self.scheme, self.query, self.username, self.domain, self.domain_tld, self.domain_psl, self.domain_sld)
+            ic(
+                self.urlparse,
+                self.iri,
+                self.link_text,
+                self.fragment,
+                self.geturl,
+                self.hostname,
+                self.netloc,
+                self.params,
+                self.password,
+                self.path,
+                self.scheme,
+                self.query,
+                self.username,
+                self.domain,
+                self.domain_tld,
+                self.domain_psl,
+                self.domain_sld,
+            )
 
     def __repr__(self):
-        return '<iridb.atoms.UrlparseResult ' + str(self) + '>'
+        return f"<iridb.atoms.UrlparseResult {str(self)}>"
 
 
 @click.command()
 @click.argument("iris", type=str, nargs=-1)
 @click_add_options(click_global_options)
 @click.pass_context
-def cli(ctx,
-        iris: Optional[Iterable[str]],
-        verbose: Union[bool, int, float],
-        verbose_inf: bool,
-        ):
+def cli(
+    ctx,
+    iris: Optional[Iterable[str]],
+    verbose: Union[bool, int, float],
+    verbose_inf: bool,
+    dict_input: bool,
+):
 
-    ctx.ensure_object(dict)
-    tty, verbose = tv(ctx=ctx,
-                      verbose=verbose,
-                      verbose_inf=verbose_inf,
-                      )
+    tty, verbose = tv(
+        ctx=ctx,
+        verbose=verbose,
+        verbose_inf=verbose_inf,
+    )
 
-    end = b'\0'
-    if tty:
-        end = b'\n'
     if iris:
         iterator = iris
     else:
-        iterator = unmp(valid_types=[str,], verbose=verbose)
+        iterator = unmp(
+            valid_types=[
+                str,
+            ],
+            verbose=verbose,
+        )
 
     index = 0
     for index, iri in enumerate(iterator):
         if verbose:
             ic(index, iri)
 
-        iri = UrlparseResult(iri=iri,
-                             verbose=verbose,
-                             )
+        iri = UrlparseResult(
+            iri=iri,
+            verbose=verbose,
+        )
 
-        print(iri, end=end.decode('utf8'))
+        output(iri, reason=None, verbose=verbose, tty=tty, dict_input=dict_input)
 
 
-
-#def domain_set_to_sorted_list_grouped_by_tld(domains):
+# def domain_set_to_sorted_list_grouped_by_tld(domains):
 #    data = []
 #    for x in domains:
 #       d = x.strip().split('.')
