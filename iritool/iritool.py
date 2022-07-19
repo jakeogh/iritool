@@ -1,31 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
-# pylint: disable=C0111  # docstrings are always outdated and wrong
-# pylint: disable=W0511  # todo is encouraged
-# pylint: disable=C0301  # line too long
-# pylint: disable=R0902  # too many instance attributes
-# pylint: disable=C0302  # too many lines in module
-# pylint: disable=C0103  # single letter var names, func name too descriptive
-# pylint: disable=R0911  # too many return statements
-# pylint: disable=R0912  # too many branches
-# pylint: disable=R0915  # too many statements
-# pylint: disable=R0913  # too many arguments
-# pylint: disable=R1702  # too many nested blocks
-# pylint: disable=R0914  # too many local variables
-# pylint: disable=R0903  # too few public methods
-# pylint: disable=E1101  # no member for base
-# pylint: disable=W0201  # attribute defined outside __init__
-# pylint: disable=R0916  # Too many boolean expressions in if statement
+# pylint: disable=missing-docstring               # [C0111] docstrings are always outdated and wrong
+# pylint: disable=fixme                           # [W0511] todo is encouraged
+# pylint: disable=line-too-long                   # [C0301]
+# pylint: disable=too-many-instance-attributes    # [R0902]
+# pylint: disable=too-many-lines                  # [C0302] too many lines in module
+# pylint: disable=invalid-name                    # [C0103] single letter var names, name too descriptive
+# pylint: disable=too-many-return-statements      # [R0911]
+# pylint: disable=too-many-branches               # [R0912]
+# pylint: disable=too-many-statements             # [R0915]
+# pylint: disable=too-many-arguments              # [R0913]
+# pylint: disable=too-many-nested-blocks          # [R1702]
+# pylint: disable=too-many-locals                 # [R0914]
+# pylint: disable=too-few-public-methods          # [R0903]
+# pylint: disable=no-member                       # [E1101] no member for base
+# pylint: disable=attribute-defined-outside-init  # [W0201]
+# pylint: disable=too-many-boolean-expressions    # [R0916] in if statement
+from __future__ import annotations
 
 from signal import SIG_DFL
 from signal import SIGPIPE
 from signal import signal
 from typing import Iterable
-from typing import Optional
-from typing import Union
-from urllib.parse import ParseResult
-from urllib.parse import SplitResult
 from urllib.parse import urldefrag
 from urllib.parse import urlparse
 from urllib.parse import urlsplit
@@ -39,8 +36,8 @@ from clicktool import tv
 from hashtool import Digest
 from iridb.tld import tldextract
 from mptool import output
-from mptool import unmp
 from reify import reify
+from unmp import unmp
 from urltool import extract_psl_domain
 
 signal(SIGPIPE, SIG_DFL)
@@ -55,7 +52,7 @@ class IriBase:
     # iri: Union[ParseResult, SplitResult]
     iri: str
     domain: str
-    verbose: Union[bool, int, float]
+    verbose: bool | int | float
 
     def __str__(self):
         # import IPython; IPython.embed()
@@ -127,8 +124,8 @@ class UrlsplitResult(IriBase):
     def __init__(
         self,
         iri: str,
-        verbose: Union[bool, int, float],
-        link_text: Optional[str] = None,
+        verbose: bool | int | float,
+        link_text: None | str = None,
     ):
         try:
             assert isinstance(iri, str)
@@ -167,8 +164,8 @@ class UrlparseResult(IriBase):
     def __init__(
         self,
         iri: str,
-        verbose: Union[bool, int, float],
-        link_text: Optional[str] = None,
+        verbose: bool | int | float,
+        link_text: None | str = None,
         allow_missing_scheme: bool = False,
     ):
         try:
@@ -237,8 +234,8 @@ class UrlparseResult(IriBase):
 @click.pass_context
 def cli(
     ctx,
-    iris: Optional[Iterable[str]],
-    verbose: Union[bool, int, float],
+    iris: None | Iterable[str],
+    verbose: bool | int | float,
     verbose_inf: bool,
     dict_input: bool,
 ):
