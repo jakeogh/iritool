@@ -165,8 +165,8 @@ class UrlparseResult(IriBase):
         self,
         iri: str,
         verbose: bool | int | float,
+        allow_missing_scheme: bool,
         link_text: None | str = None,
-        allow_missing_scheme: bool = False,
     ):
         try:
             assert isinstance(iri, str)
@@ -230,11 +230,13 @@ class UrlparseResult(IriBase):
 
 @click.command()
 @click.argument("iris", type=str, nargs=-1)
+@click.option("--allow-missing-scheme", is_falg=True)
 @click_add_options(click_global_options)
 @click.pass_context
 def cli(
     ctx,
     iris: None | Iterable[str],
+    allow_missing_scheme: bool,
     verbose: bool | int | float,
     verbose_inf: bool,
     dict_input: bool,
@@ -263,6 +265,7 @@ def cli(
 
         iri = UrlparseResult(
             iri=iri,
+            allow_missing_scheme=allow_missing_scheme,
             verbose=verbose,
         )
 
