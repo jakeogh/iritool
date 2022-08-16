@@ -230,7 +230,7 @@ class UrlparseResult(IriBase):
 
 @click.command()
 @click.argument("iris", type=str, nargs=-1)
-@click.option("--allow-missing-scheme", is_falg=True)
+@click.option("--allow-missing-scheme", is_flag=True)
 @click_add_options(click_global_options)
 @click.pass_context
 def cli(
