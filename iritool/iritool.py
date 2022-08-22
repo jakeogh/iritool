@@ -239,7 +239,7 @@ def cli(
     allow_missing_scheme: bool,
     verbose: bool | int | float,
     verbose_inf: bool,
-    dict_input: bool,
+    dict_output: bool,
 ):
 
     tty, verbose = tv(
@@ -269,7 +269,7 @@ def cli(
             verbose=verbose,
         )
 
-        output(iri, reason=None, verbose=verbose, tty=tty, dict_input=dict_input)
+        output(iri, reason=None, verbose=verbose, tty=tty, dict_output=dict_output)
 
 
 # def domain_set_to_sorted_list_grouped_by_tld(domains):
