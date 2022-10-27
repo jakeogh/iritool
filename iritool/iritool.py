@@ -29,7 +29,6 @@ from urllib.parse import urlsplit
 
 import click
 from asserttool import ic
-from asserttool import increment_debug
 from clicktool import click_add_options
 from clicktool import click_global_options
 from clicktool import tv
@@ -120,7 +119,6 @@ class IriBase:
 
 
 class UrlsplitResult(IriBase):
-    @increment_debug
     def __init__(
         self,
         iri: str,
@@ -160,7 +158,6 @@ class UrlsplitResult(IriBase):
 
 
 class UrlparseResult(IriBase):
-    @increment_debug
     def __init__(
         self,
         iri: str,
@@ -263,13 +260,13 @@ def cli(
         if verbose:
             ic(index, iri)
 
-        iri = UrlparseResult(
+        _iri = UrlparseResult(
             iri=iri,
             allow_missing_scheme=allow_missing_scheme,
             verbose=verbose,
         )
 
-        output(iri, reason=None, verbose=verbose, tty=tty, dict_output=dict_output)
+        output(_iri, reason=None, verbose=verbose, tty=tty, dict_output=dict_output)
 
 
 # def domain_set_to_sorted_list_grouped_by_tld(domains):
