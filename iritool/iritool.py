@@ -163,7 +163,7 @@ class UrlparseResult(IriBase):
         self,
         iri: str,
         verbose: bool | int | float,
-        allow_missing_scheme: bool,
+        allow_missing_scheme: bool = False,
         link_text: None | str = None,
     ):
         try:
