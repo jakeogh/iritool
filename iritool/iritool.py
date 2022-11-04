@@ -48,14 +48,11 @@ class UrlMissingSchemeError(ValueError):
 
 
 class IriBase:
-    # iri: ParseResult | SplitResult  # X | Y syntax for unions requires Python 3.10  [misc]
-    # iri: Union[ParseResult, SplitResult]
     iri: str
     domain: str
     verbose: bool | int | float
 
     def __str__(self):
-        # import IPython; IPython.embed()
         return self.iri
 
     def __contains__(self, match):
@@ -268,16 +265,3 @@ def cli(
         )
 
         output(_iri, reason=None, verbose=verbose, tty=tty, dict_output=dict_output)
-
-
-# def domain_set_to_sorted_list_grouped_by_tld(domains):
-#    data = []
-#    for x in domains:
-#       d = x.strip().split('.')
-#       d.reverse()
-#       data.append(d)
-#    data.sort()
-#    for y in data:
-#       y.reverse()
-#       print('.'.join(y))
-#
